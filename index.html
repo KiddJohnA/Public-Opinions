@@ -15,13 +15,23 @@
 <body>
     <h1>Public Opinions</h1>
 
-    <div class="container">
-        <div class="row">
-            <div class="col">
+<div class="container">
+    <div class="row">
+
+        <div class="col">
+        <form id="email_form"
+        action="https://script.google.com/macros/s/AKfycbwJd7PmUZ7Nc9eYPIpQXMN9j29mKNuxXTp1C0tsNQfPutEydbxPSQiQ_P5kwu9TeDeyWw/exec" method=get>
+        <label for="email">Email: </label>
+        <input type="text" name="email"><br><br>
+        <input id="submit-form" type="submit" value="Submit">
+        </form>
+        </div>
+        
+         <div class="col">
     <h3>The Problem</h3>
     <p>
         Currently, investors have to search multiple social media and news sites,
-        reading posts and articles, and watching videos just to decide to buy, sell
+        reading post after post, and article after article just to decide to buy, sell
         or hold a company's stock. And even if the company has good news,
         I still don’t know what other companies have good news, let alone which company
         has the most good news.
@@ -35,17 +45,9 @@
         articles, and videos for each stock so traders can know which stocks have the most positive
         and negative opinions and news at any given time.
     </p>
-    </div>
-    <div class="col">
-        <form id="email_form"
-        action="https://script.google.com/macros/s/AKfycbwJd7PmUZ7Nc9eYPIpQXMN9j29mKNuxXTp1C0tsNQfPutEydbxPSQiQ_P5kwu9TeDeyWw/exec" method=get>
-        <label for="email">Email: </label>
-        <input type="text" name="email"><br><br>
-        <input id="submit-form" type="submit" value="Submit">
-        </form>
-            </div>
         </div>
     </div>
+</div>
 
     <script src="plugins/js/jquery-3.6.0.min.js"></script>
     <script src="plugins/js/bootstrap.min.js"></script>
