@@ -17,21 +17,6 @@
   <input type="submit" value="Submit">
   </form>
 
-    var $form = $('form#test-form'),
-    url = 'https://script.google.com/macros/s/AKfycbwJd7PmUZ7Nc9eYPIpQXMN9j29mKNuxXTp1C0tsNQfPutEydbxPSQiQ_P5kwu9TeDeyWw/exec'
-
-$('#submit-form').on('click', function(e) {
-  e.preventDefault();
-  var jqxhr = $.ajax({
-    url: url,
-    method: "GET",
-    dataType: "json",
-    data: $form.serializeObject()
-  }).success(
-    // do something
-  );
-})
-    
     <h2>The Problem</h2>
     <p>
         Currently, investors have to search multiple social media and news sites,
@@ -52,7 +37,20 @@ $('#submit-form').on('click', function(e) {
     <script src="plugins/js/jquery-3.6.0.min.js"></script>
     <script src="plugins/js/bootstrap.min.js"></script>
     <script>
-        /* JavaScript stuff goes here */
+    var $form = $('form#test-form'),
+    url = 'https://script.google.com/macros/s/AKfycbwJd7PmUZ7Nc9eYPIpQXMN9j29mKNuxXTp1C0tsNQfPutEydbxPSQiQ_P5kwu9TeDeyWw/exec'
+
+$('#submit-form').on('click', function(e) {
+  e.preventDefault();
+  var jqxhr = $.ajax({
+    url: url,
+    method: "GET",
+    dataType: "json",
+    data: $form.serializeObject()
+  }).success(
+    // do something
+  );
+})
     </script>
 </body>
 </html>
