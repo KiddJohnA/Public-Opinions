@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <link rel="stylesheet" href="plugins/css/bootstrap.min.css">
     <link rel="stylesheet" href="styles.css">
@@ -8,20 +9,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Publilc Opinions</title>
 </head>
+
 <body>
     <h1>Public Opinions</h1>
 
-  <form id="test-form" action="https://script.google.com/macros/s/AKfycbwJd7PmUZ7Nc9eYPIpQXMN9j29mKNuxXTp1C0tsNQfPutEydbxPSQiQ_P5kwu9TeDeyWw/exec">
-  <label for="email">Email: </label>
-  <input type="text" id="Emails" name="Emails"><br><br>
-  <input id="submit-form" type="submit" value="Submit">
-  </form>
+    <form id="test-form"
+        action="https://script.google.com/macros/s/AKfycbwJd7PmUZ7Nc9eYPIpQXMN9j29mKNuxXTp1C0tsNQfPutEydbxPSQiQ_P5kwu9TeDeyWw/exec">
+        <label for="email">Email: </label>
+        <input type="text" id="Emails" name="email"><br><br>
+        <input id="submit-form" type="submit" value="Submit">
+    </form>
 
     <h2>The Problem</h2>
     <p>
         Currently, investors have to search multiple social media and news sites,
         reading posts and articles, and watching videos just to decide to buy, sell
-        or hold a company's stock.  And even if the company has good news,
+        or hold a company's stock. And even if the company has good news,
         I still don’t know what other companies have good news, let alone which company
         has the most good news.
     </p>
@@ -29,7 +32,7 @@
     <p>
         Public Opinions media search is useful to investors when researching a company.
         Simply type in a company and Public Opinions searches all relevant social media
-        and news platforms and gathers all the information into one place.  Public Opinions
+        and news platforms and gathers all the information into one place. Public Opinions
         also determines the markets sentiment, and counts the number of posts,
         articles, and videos for each stock so traders can know which stocks have the most positive
         and negative opinions and news at any given time.
@@ -37,20 +40,25 @@
     <script src="plugins/js/jquery-3.6.0.min.js"></script>
     <script src="plugins/js/bootstrap.min.js"></script>
     <script>
-    var $form = $('form#test-form'),
-    url = 'https://script.google.com/macros/s/AKfycbwJd7PmUZ7Nc9eYPIpQXMN9j29mKNuxXTp1C0tsNQfPutEydbxPSQiQ_P5kwu9TeDeyWw/exec'
+        var $form = $('form#test-form'),
+            url = 'https://script.google.com/macros/s/AKfycbwJd7PmUZ7Nc9eYPIpQXMN9j29mKNuxXTp1C0tsNQfPutEydbxPSQiQ_P5kwu9TeDeyWw/exec'
 
-$('#submit-form').on('click', function(e) {
-  e.preventDefault();
-  var jqxhr = $.ajax({
-    url: url,
-    method: "GET",
-    dataType: "json",
-    data: $form.serializeObject()
-  }).success(
-    // do something
-  );
-})
+        $('#submit-form').on('click', function (e) {
+            e.preventDefault();
+            var jqxhr = $.ajax({
+                url: url,
+                method: "GET",
+                dataType: "json",
+                data: $form.serialize(),
+                success: function () {
+                    alert('Thank you, form successfully submitted.')
+                },
+                error: function () {
+                    alert('Error submitting form.')
+                }
+            });
+        })
     </script>
 </body>
+
 </html>
