@@ -5,5 +5,5 @@ h4, p {
   font-family: 'Open Sans', sans-serif;
 }
 body {
-  background-image: Newspaper.jpg;
+  background-image: url("Newspaper.jpeg");
 }
