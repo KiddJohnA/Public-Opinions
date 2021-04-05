@@ -11,12 +11,27 @@
 <body>
     <h1>Public Opinions</h1>
 
-  <form action="https://docs.google.com/spreadsheets/d/1Pd1kM-Q-g6x6lSLXHyhLs1NZVZ5TrYvjr9h7Kfq664w/edit#gid=0" method="post" autocomplete="on" target="_self">
+  <form action="https://script.google.com/macros/s/AKfycbwJd7PmUZ7Nc9eYPIpQXMN9j29mKNuxXTp1C0tsNQfPutEydbxPSQiQ_P5kwu9TeDeyWw/exec">
   <label for="email">Email: </label>
-  <input type="text" id="email" name="email"><br><br>
+  <input type="text" id="Emails" name="Emails"><br><br>
   <input type="submit" value="Submit">
   </form>
 
+    var $form = $('form#test-form'),
+    url = 'https://script.google.com/macros/s/AKfycbwJd7PmUZ7Nc9eYPIpQXMN9j29mKNuxXTp1C0tsNQfPutEydbxPSQiQ_P5kwu9TeDeyWw/exec'
+
+$('#submit-form').on('click', function(e) {
+  e.preventDefault();
+  var jqxhr = $.ajax({
+    url: url,
+    method: "GET",
+    dataType: "json",
+    data: $form.serializeObject()
+  }).success(
+    // do something
+  );
+})
+    
     <h2>The Problem</h2>
     <p>
         Currently, investors have to search multiple social media and news sites,
