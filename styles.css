@@ -1,6 +1,9 @@
 h1 {
   font-family: 'Josefin Sans', sans-serif;
 }
-h2, p {
+h2 {
   font-family: 'Josefin Slab', serif;
+}
+p {
+  font-family: 'Open Sans', sans-serif;
 }
