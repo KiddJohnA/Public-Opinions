@@ -23,37 +23,85 @@
                 </div>
             </div>
         </form>
+
+        <!-- this is where results show up -->
         <div id="results" class="d-flex flex-column justify-content-center align-items-center"></div>
     </div>
     <script src="plugins/js/jquery-3.6.0.min.js"></script>
     <script src="plugins/js/bootstrap.min.js"></script>
     <script>
+
+        // here is the url we goto to get post data
+        // this is a function that takes a subreddit name and returns the url to get data about that subreddit
         const subreddit_url = subredditName => {
             return `https://api.pushshift.io/reddit/search/submission/?subreddit=${subredditName}&sort=desc`
         }
 
+        // this sets an 'on click' handler for our submit button
+        // 'when the users clicks the button run this function'
         $('#submit-form').on('click', function (e) {
+            // prevent the browser from reloading the page
             e.preventDefault();
+
+            // get the name of the subreddit from our input
+            // jquery uses $() to access elements on the page
+            // the # means that we are using an id
+            // if you look above you can see that our input has the id subreddit-input
+            // so this will pull that element from the page and then use the '.val()' funciton to get its value (the text inside)
             subreddit = encodeURIComponent($('#subreddit-input').val())
+
+            // use the function defined above to build our url with the value we got from our input
             const url = subreddit_url(subreddit)
+
+            // log the url in the dev console so we can click it if we need to check something out
+            // (open developer tools and go to the console tab)
             console.log(url)
+
+            // if our input is not empty (dont do anyting if the submit button is clicked with an empty input)
             if (subreddit !== '') {
+
+                // jquery ajax function is used to get data from a url without reloading the page
                 var jqxhr = $.ajax({
+                    // our url we defined above
                     url: url,
+
+                    // a GET request means we are storing information in the URL (query parameters)
+                    // this is everything you see after the '?' in the URL
+                    // the site we request data from uses the information after the '?' to pull the data we want
+                    // the response in in json
                     method: "GET",
+
+                    // on success, do this if we get a good response (status code 200)
                     success: function (response) {
+                        // get the div with id results (the place we put our results)
+                        // set the content of that div to empty (reset to get ready to put in new results)
                         $('#results').html('')
+
+                        // go through each result and call it 'post' (this name could be anything)
                         for (let post of response.data) {
+
+                            // create an new div to hold our post
                             const div = document.createElement('div')
+
+                            // basic css styling for the div
                             div.style = "padding: 5px; margin: 5px; width: 400px; border: 1px solid black; border-radius: 5px;"
+
+                            // set the inner html of the div
+                            // you can add anything here you want, by clicking on the link
+                            // in the console or checking out the pushshift.io available parameters
+                            // you can see what sort of data about the post you can show
                             div.innerHTML = `
                                 <h3>${post['title']}</h3>
                                 <p>${post['selftext']}</p>
                                 <a href="${'https://reddit.com' + post['permalink']}" target="_blank">link</a>
                             `
+
+                            // add our new post div to the page
                             $('#results').append(div)
                         }
                     },
+
+                    // if we get an error do this
                     error: function () {
                         alert('Error submitting form.')
                     }
