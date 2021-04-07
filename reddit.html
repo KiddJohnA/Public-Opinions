@@ -45,11 +45,11 @@
                         $('#results').html('')
                         for (let post of response.data) {
                             const div = document.createElement('div')
-                            div.style = "padding: 5px; width: 400px; border: 1px solid black; border-radius: 5px;"
+                            div.style = "padding: 5px; margin: 5px; width: 400px; border: 1px solid black; border-radius: 5px;"
                             div.innerHTML = `
                                 <h3>${post['title']}</h3>
                                 <p>${post['selftext']}</p>
-                                <a href="${post['url']}">link</a>
+                                <a href="${post['url']}" target="_blank">link</a>
                             `
                             $('#results').append(div)
                         }
