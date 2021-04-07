@@ -1,0 +1,67 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reddit Search</title>
+    <link rel="stylesheet" href="plugins/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div style="margin: 10px;">
+        <form id="form" class="form-inline">
+            <div class="form-row text-center">
+                <div class="col-auto">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="subreddit-input" placeholder="Subreddit Name"
+                            name="subreddit-input" required>
+                        <div class="col-auto">
+                            <button id="submit-form" type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div id="results" class="d-flex flex-column justify-content-center align-items-center"></div>
+    </div>
+    <script src="plugins/js/jquery-3.6.0.min.js"></script>
+    <script src="plugins/js/bootstrap.min.js"></script>
+    <script>
+        const subreddit_url = subredditName => {
+            return `https://api.pushshift.io/reddit/search/submission/?subreddit=${subredditName}&sort=desc`
+        }
+
+        $('#submit-form').on('click', function (e) {
+            e.preventDefault();
+            subreddit = encodeURIComponent($('#subreddit-input').val())
+            const url = subreddit_url(subreddit)
+            console.log(url)
+            if (subreddit !== '') {
+                var jqxhr = $.ajax({
+                    url: url,
+                    method: "GET",
+                    success: function (response) {
+                        $('#results').html('')
+                        for (let post of response.data) {
+                            const div = document.createElement('div')
+                            div.style = "padding: 5px; width: 400px; border: 1px solid black; border-radius: 5px;"
+                            div.innerHTML = `
+                                <h3>${post['title']}</h3>
+                                <p>${post['selftext']}</p>
+                                <a href="${post['url']}">link</a>
+                            `
+                            $('#results').append(div)
+                        }
+                    },
+                    error: function () {
+                        alert('Error submitting form.')
+                    }
+                });
+            }
+        })
+
+    </script>
+</body>
+
+</html>
