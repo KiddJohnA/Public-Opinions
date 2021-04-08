@@ -96,7 +96,7 @@
         // here is the url we goto to get post data
         // this is a function that takes a subreddit name and returns the url to get data about that subreddit
         const subreddit_url = (subredditName, query) => {
-            return `https://api.pushshift.io/reddit/search/submission/?subreddit=${subredditName}&sort=desc&sort_type=score&score=>1&after=30d&size=500&q=${query}`
+            return `https://api.pushshift.io/reddit/search/submission/?subreddit=${subredditName}&sort=desc&sort_type=score&score=>1&size=500&q=${query}`
         }
 
         // this sets an 'on click' handler for our submit button
