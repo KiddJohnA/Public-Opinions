@@ -139,7 +139,9 @@
                         // get the div with id results (the place we put our results)
                         // set the content of that div to empty (reset to get ready to put in new results)
                         $('#results').html('')
-
+                        if (response.data.length == 0) {
+                            alert("no results")
+                        }
                         // go through each result and call it 'post' (this name could be anything)
                         for (let post of response.data) {
 
