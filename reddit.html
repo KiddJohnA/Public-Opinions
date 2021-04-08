@@ -6,6 +6,66 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reddit Search</title>
     <link rel="stylesheet" href="plugins/css/bootstrap.min.css">
+    <style>
+        body {
+            margin: 5px;
+            background-color: rgb(232, 232, 232);
+        }
+
+        .form-inline {
+            width: 50%;
+            margin: 0 auto;
+        }
+
+        .grid {
+            -webkit-column-count: 5;
+            -webkit-column-gap: 10px;
+            -moz-column-count: 5;
+            -moz-column-gap: 10px;
+            column-count: 5;
+            column-gap: 10px;
+            grid-gap: 10px;
+        }
+
+        .post {
+            display: inline-block;
+            width: 100% !important;
+            height: 100% !important;
+            padding: 5px;
+        }
+
+        @media (max-width: 1200px) {
+            .grid {
+                -moz-column-count: 4;
+                -webkit-column-count: 4;
+                column-count: 4;
+            }
+        }
+
+        @media (max-width: 1000px) {
+            .grid {
+                -moz-column-count: 3;
+                -webkit-column-count: 3;
+                column-count: 3;
+            }
+        }
+
+        @media (max-width: 800px) {
+            .grid {
+                -moz-column-count: 2;
+                -webkit-column-count: 2;
+                column-count: 2;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .grid {
+                -moz-column-count: 1;
+                -webkit-column-count: 1;
+                column-count: 1;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -16,6 +76,8 @@
                     <div class="input-group">
                         <input type="text" class="form-control" id="subreddit-input" placeholder="Subreddit Name"
                             name="subreddit-input" required>
+                        <input type="text" class="form-control" id="query-input" placeholder="Query" name="query-input"
+                            required>
                         <div class="col-auto">
                             <button id="submit-form" type="submit" class="btn btn-primary">Submit</button>
                         </div>
@@ -25,7 +87,7 @@
         </form>
 
         <!-- this is where results show up -->
-        <div id="results" class="d-flex flex-column justify-content-center align-items-center"></div>
+        <div id="results" class="grid"></div>
     </div>
     <script src="plugins/js/jquery-3.6.0.min.js"></script>
     <script src="plugins/js/bootstrap.min.js"></script>
@@ -33,8 +95,8 @@
 
         // here is the url we goto to get post data
         // this is a function that takes a subreddit name and returns the url to get data about that subreddit
-        const subreddit_url = subredditName => {
-            return `https://api.pushshift.io/reddit/search/submission/?subreddit=${subredditName}&sort=desc`
+        const subreddit_url = (subredditName, query) => {
+            return `https://api.pushshift.io/reddit/search/submission/?subreddit=${subredditName}&sort=desc&sort_type=score&score=>1&after=30d&size=500&q=${query}`
         }
 
         // this sets an 'on click' handler for our submit button
@@ -49,9 +111,10 @@
             // if you look above you can see that our input has the id subreddit-input
             // so this will pull that element from the page and then use the '.val()' funciton to get its value (the text inside)
             subreddit = encodeURIComponent($('#subreddit-input').val())
+            query = encodeURIComponent($('#query-input').val())
 
             // use the function defined above to build our url with the value we got from our input
-            const url = subreddit_url(subreddit)
+            const url = subreddit_url(subreddit, query)
 
             // log the url in the dev console so we can click it if we need to check something out
             // (open developer tools and go to the console tab)
@@ -83,17 +146,31 @@
                             // create an new div to hold our post
                             const div = document.createElement('div')
 
-                            // basic css styling for the div
-                            div.style = "padding: 5px; margin: 5px; width: 400px; border: 1px solid black; border-radius: 5px;"
+                            // add the class post to the div
+                            div.classList.add("post")
+
+                            // convert date utc to date object
+                            created_date = new Date(post['created_utc'])
 
                             // set the inner html of the div
                             // you can add anything here you want, by clicking on the link
                             // in the console or checking out the pushshift.io available parameters
                             // you can see what sort of data about the post you can show
+
+                            // using bootstrap to make cards
                             div.innerHTML = `
-                                <h3>${post['title']}</h3>
-                                <p>${post['selftext']}</p>
-                                <a href="${'https://reddit.com' + post['permalink']}" target="_blank">link</a>
+                                <div class="card">
+                                    ${post['url'] != '' && post['url'].includes('jpg') ?
+                                        '<img class="card-img-top" width="100%" src="' + post['url'] + '" />' :
+                                    ''
+                                    }
+                                    <div class="card-body">
+                                        <h5 class="card-title">${post['title']}</h5>
+                                        <h6 class="card-subtitle">score: ${post['score']}, created: ${created_date}</h6>
+                                        <p class="card-text">${post['selftext'].length > 300 ? post['selftext'].substring(0, 300) + '...' : post['selftext']}</p>
+                                        <a class="card-link" href="${'https://reddit.com' + post['permalink']}" target="_blank">link</a>
+                                    </div>
+                                </div>
                             `
 
                             // add our new post div to the page
