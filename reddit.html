@@ -101,7 +101,11 @@
         // here is the url we goto to get post data
         // this is a function that takes a subreddit name and returns the url to get data about that subreddit
         const subreddit_url = (subredditName, sortType, query) => {
-            return `https://api.pushshift.io/reddit/search/submission/?subreddit=${subredditName}&sort=desc&sort_type=${sortType}&score=>1&size=500&q=${query}`
+            return 'https://api.pushshift.io/reddit/search/submission/?' +
+                (subredditName == '' ? '' : `subreddit=${subredditName}&`) +
+                (sortType == '' ? '' : `sort_type=${sortType}&`) +
+                (query == '' ? '' : `q=${query}&`) +
+                'sort=desc&score=>0&size=500'
         }
 
         // this sets an 'on click' handler for our submit button
@@ -126,73 +130,69 @@
             // (open developer tools and go to the console tab)
             console.log(url)
 
-            // if our input is not empty (dont do anyting if the submit button is clicked with an empty input)
-            if (subreddit !== '') {
+            // jquery ajax function is used to get data from a url without reloading the page
+            var jqxhr = $.ajax({
+                // our url we defined above
+                url: url,
 
-                // jquery ajax function is used to get data from a url without reloading the page
-                var jqxhr = $.ajax({
-                    // our url we defined above
-                    url: url,
+                // a GET request means we are storing information in the URL (query parameters)
+                // this is everything you see after the '?' in the URL
+                // the site we request data from uses the information after the '?' to pull the data we want
+                // the response in in json
+                method: "GET",
 
-                    // a GET request means we are storing information in the URL (query parameters)
-                    // this is everything you see after the '?' in the URL
-                    // the site we request data from uses the information after the '?' to pull the data we want
-                    // the response in in json
-                    method: "GET",
+                // on success, do this if we get a good response (status code 200)
+                success: function (response) {
+                    // get the div with id results (the place we put our results)
+                    // set the content of that div to empty (reset to get ready to put in new results)
+                    $('#results').html('')
+                    if (response.data.length == 0) {
+                        alert("no results")
+                    }
+                    // go through each result and call it 'post' (this name could be anything)
+                    for (let post of response.data) {
 
-                    // on success, do this if we get a good response (status code 200)
-                    success: function (response) {
-                        // get the div with id results (the place we put our results)
-                        // set the content of that div to empty (reset to get ready to put in new results)
-                        $('#results').html('')
-                        if (response.data.length == 0) {
-                            alert("no results")
-                        }
-                        // go through each result and call it 'post' (this name could be anything)
-                        for (let post of response.data) {
+                        // create an new div to hold our post
+                        const div = document.createElement('div')
 
-                            // create an new div to hold our post
-                            const div = document.createElement('div')
+                        // add the class post to the div
+                        div.classList.add("post")
 
-                            // add the class post to the div
-                            div.classList.add("post")
+                        // convert date utc to date object
+                        // have to multiply by 1000 to convert see: https://stackoverflow.com/questions/847185/convert-a-unix-timestamp-to-time-in-javascript
+                        created_date = new Date(post['created_utc'] * 1000)
 
-                            // convert date utc to date object
-                            // have to multiply by 1000 to convert see: https://stackoverflow.com/questions/847185/convert-a-unix-timestamp-to-time-in-javascript
-                            created_date = new Date(post['created_utc'] * 1000)
+                        // set the inner html of the div
+                        // you can add anything here you want, by clicking on the link
+                        // in the console or checking out the pushshift.io available parameters
+                        // you can see what sort of data about the post you can show
 
-                            // set the inner html of the div
-                            // you can add anything here you want, by clicking on the link
-                            // in the console or checking out the pushshift.io available parameters
-                            // you can see what sort of data about the post you can show
-
-                            // using bootstrap to make cards
-                            div.innerHTML = `
+                        // using bootstrap to make cards
+                        div.innerHTML = `
                                 <div class="card">
                                     ${post['url'] != '' && post['url'].includes('jpg') ?
-                                        '<img class="card-img-top" width="100%" src="' + post['url'] + '" />' :
-                                    ''
-                                    }
+                                '<img class="card-img-top" width="100%" src="' + post['url'] + '" />' :
+                                ''
+                            }
                                     <div class="card-body">
                                         <h5 class="card-title">${post['title']}</h5>
-                                        <h6 class="card-subtitle">score: ${post['score']}, created: ${created_date}</h6>
+                                        <h6 class="card-subtitle">subreddit: ${post['subreddit']}, score: ${post['score']}, created: ${created_date}</h6>
                                         <p class="card-text">${post['selftext'].length > 300 ? post['selftext'].substring(0, 300) + '...' : post['selftext']}</p>
                                         <a class="card-link" href="${'https://reddit.com' + post['permalink']}" target="_blank">link</a>
                                     </div>
                                 </div>
                             `
 
-                            // add our new post div to the page
-                            $('#results').append(div)
-                        }
-                    },
-
-                    // if we get an error do this
-                    error: function () {
-                        alert('Error submitting form.')
+                        // add our new post div to the page
+                        $('#results').append(div)
                     }
-                });
-            }
+                },
+
+                // if we get an error do this
+                error: function () {
+                    alert('Error submitting form.')
+                }
+            });
         })
 
     </script>
